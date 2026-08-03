@@ -23,12 +23,12 @@ Exploring the nuScenes dataset gives an appreciation for the sheer volume of hig
 *Sensor Occlusion: We can see the shadow of the LiDAR behind the cars that drive past*
 
 ### Filtering & Tuning
-However, feeding this raw, unfiltered data directly into the default `octomap_server` in ROS 2 leads to an incredibly busy and noisy OctoMap (especially on the ground surface). To ensure a highly performant and clean HD map, I tuned three spatial filters:
+However, feeding this raw, unfiltered data directly into the default `octomap_server` in ROS 2 leads to an incredibly busy and noisy OctoMap (especially on the ground surface, see the green on the ground on the left image below). To ensure a highly performant and clean HD map, I tuned three spatial filters:
 
 ![Z-Axis Clipping: Pre-Filter vs Post-Filter](media/filter_comparison.png)
 
 * **`occupancy_min_z: 0.3` (The Ground Filter):** Raw LiDAR inherently maps the driveable road surface as a solid 3D barrier. Clipping everything below 30cm instantly deletes the road, dropping millions of useless floor voxels without burning heavy CPU cycles on Planar Segmentation algorithms.
-* **`occupancy_max_z: 20.0` (The Sky Filter):** Clips out high-altitude laser reflections (like glass skyscrapers) that create floating "ghost" voxels in the sky.  This also results in a different color gradient. 
+* **`occupancy_max_z: 20.0` (The Sky Filter):** Clips out high-altitude laser reflections (like glass skyscrapers) that create floating "ghost" voxels in the sky.  This also results in a different color gradient (compare the above 2 sides). 
 * **`sensor_model/max_range: 40.0` (The Radius Filter):** Truncates any points beyond 40 meters, keeping the map dense and deleting long-range, low-confidence scatter.
 
 
